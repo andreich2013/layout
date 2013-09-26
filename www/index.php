@@ -3,7 +3,7 @@
     require_once "views/scripts/markup.php";
     
     /*
-     * create Singleton Markup with yothfool data
+     * create Singleton Markup with youthfool data
      */
     $markup = Markup::getInstance();
     

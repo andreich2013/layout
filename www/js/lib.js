@@ -1,241 +1,186 @@
 /*
- * @param {object} window.event
- * 
- * @returns {Boolean}
- *
- * crossbrowser event.preventDefault()
- */
-function cancelDefaultEvent(e) {
- 
-    if(!e) var e = window.event;
-
-    e.cancelBubble = true;
-    e.returnValue = false;
-
-    if ( e.stopPropagation ) e.stopPropagation();
-    if ( e.preventDefault ) e.preventDefault();		
- 
-    return false;
-}
-
-/*
- * 
- * @param {object} window.event
- * 
- * @returns {undefined}
- * 
- * crossbrowser event.pageX, event.pageY
- */
-function fixPageXY(e) {
-    if (e.pageX == null && e.clientX != null ) { // если нет pageX..
-        var html = document.documentElement;
-        var body = document.body;
-
-        e.pageX = e.clientX + (html.scrollLeft || body && body.scrollLeft || 0);
-        e.pageX -= html.clientLeft || 0;
-
-        e.pageY = e.clientY + (html.scrollTop || body && body.scrollTop || 0);
-        e.pageY -= html.clientTop || 0;
-    }
-}
-
-/*
- * @param {object} window.event
- * @returns {event.which}
- * 
- * crossbrowser event.which
- */
-function fixWhich(e) {
-
-    if (!e.which && e.button) { // если which нет, но есть button...
-
-        if (e.button & 1) e.which = 1;      // левая кнопка
-
-        else if (e.button & 4) e.which = 2; // средняя кнопка
-
-        else if (e.button & 2) e.which = 3; // правая кнопка
-
-    }
-    
-    return e.which;
-}
-
-/*
  * library
  * 
  * @returns {object}
  */
 window.lib = (function() {
     
-    this.touch = !!('ontouchstart' in window) ||
-                 !!(('msMaxTouchPoints' in window.navigator) && !('onmouseover' in window));
+    // some calculating
     
-    this.fixEvent = function(e) {
-        e = e || window.event;
+    return {
+    
+        touch: !!('ontouchstart' in window) ||
+               !!(('msMaxTouchPoints' in window.navigator) && !('onmouseover' in window)),
 
-        if ( e.isFixed ) { return e; }
+        /*
+        * @param {object} window.event
+        * 
+        * @returns {window.event}
+        *
+        * crossbrowser window.event
+        */
+        fixEvent: function(e) {
+            e = e || window.event;
 
-        var body, doc,
-            button = e.button,
-            fromElement = e.fromElement;
+            if ( e.isFixed ) { return e; }
 
+            var body, doc;
 
-        e.preventDefault =  e.preventDefault || function(){ this.returnValue = false; };
-        e.stopPropagation = e.stopPropagaton || function(){ this.cancelBubble = true; };
+            e.preventDefault =  e.preventDefault || function(){ 
+                this.returnValue = false;
+                this.cancelBubble = true;
+                if ( e.stopPropagation ) e.stopPropagation();
+            };
 
-        // Support: IE<9
-        if ( !e.target ) {
-            e.target = e.srcElement || document;
-        }
+            // Support: IE<9
+            if ( !e.target ) {
+                e.target = e.srcElement || document;
+            }
 
-        // Support: Chrome 23+, Safari?
-        if ( e.target.nodeType === 3 ) {
-            e.target = e.target.parentNode;
-        }
+            // Support: Chrome 23+, Safari?
+            if ( e.target.nodeType === 3 ) {
+                e.target = e.target.parentNode;
+            }
 
-        // Support: IE<9
-        e.metaKey = !!e.metaKey;
+            // Support: IE<9
+            e.metaKey = !!e.metaKey;
 
-        // Add relatedTarget, if necessary
-        if ( !e.relatedTarget && fromElement ) {
-            e.relatedTarget = fromElement === e.target ? e.toElement : fromElement;
-        }
+            // Add relatedTarget, if necessary
+            if ( !e.relatedTarget && e.fromElement ) {
+                e.relatedTarget = e.fromElement === e.target ? e.toElement : e.fromElement;
+            }
 
-        // Calculate pageX/Y if missing and clientX/Y available
-        if ( e.pageX == null && e.clientX != null ) {
+            // Calculate pageX/Y if missing and clientX/Y available
+            if ( e.pageX == null && e.clientX != null ) {
 
-            doc = document.documentElement,
+                doc = document.documentElement,
                 body = document.body;
 
-            e.pageX = e.clientX + ( doc && doc.scrollLeft || body && body.scrollLeft || 0 ) - ( doc && doc.clientLeft || body && body.clientLeft || 0 );
-            e.pageY = e.clientY + ( doc && doc.scrollTop  || body && body.scrollTop  || 0 ) - ( doc && doc.clientTop  || body && body.clientTop  || 0 );
+                e.pageX = e.clientX + ( doc && doc.scrollLeft || body && body.scrollLeft || 0 ) - ( doc && doc.clientLeft || body && body.clientLeft || 0 );
+                e.pageY = e.clientY + ( doc && doc.scrollTop  || body && body.scrollTop  || 0 ) - ( doc && doc.clientTop  || body && body.clientTop  || 0 );
 
-        }
+            }
 
-        // Add which for click: 1 === left; 2 === middle; 3 === right
-        // Note: button is not normalized, so don't use it
-        if ( !e.which && button !== undefined ) {
-            e.which = ( button & 1 ? 1 : ( button & 2 ? 3 : ( button & 4 ? 2 : 0 ) ) );
-        }
+            // Add which for click: 1 === left; 2 === middle; 3 === right
+            // Note: button is not normalized, so don't use it
+            if ( !e.which && e.button !== undefined ) {
+                e.which = ( e.button & 1 ? 1 : ( e.button & 2 ? 3 : ( e.button & 4 ? 2 : 0 ) ) );
+            }
 
-        // Add which for key events
-        if ( !e.which ) {
-            e.which = e.charCode != null ? e.charCode : e.keyCode;
-        }
+            // Add which for key events
+            if ( !e.which ) {
+                e.which = e.charCode != null ? e.charCode : e.keyCode;
+            }
 
-        e.time = (new Date).getTime();
+            e.time = (new Date).getTime();
 
-        e.isFixed = true;
+            e.isFixed = true;
 
-        return e;
-    }
-    
-    this.getStyle = function( el ) {
-        return el.currentStyle || window.getComputedStyle(el, null);
-    }
-    
-    this.get = function(query, elem) {
-        var elem = elem || document;
-        
-        return elem.querySelectorAll(query);
-    }
-    
-    this.getFirst = function(query, elem) {
-        var elem = elem || document;
-        
-        return elem.querySelector(query);
-    }
-    
-    /*
-    * params @elem type 
-    * params @parent type 
-    * 
-    * return type boolean
-    * 
-    * determines is @parent parentNode of @elem
-    */
-    this.isParent = function(elem, parent) {
-       while(elem.parentNode !== null){
-           if(elem.parentNode === parent){
-               return true;
+            return e;
+        },
+
+        getStyle: function( elem ) {
+            return elem.currentStyle || window.getComputedStyle(elem, null);
+        },
+
+        get: function(query, elem) {
+            return (elem || document).querySelectorAll(query);
+        },
+
+        getFirst: function(query, elem) {
+            return (elem || document).querySelector(query);
+        },
+
+        /*
+        * params @elem type 
+        * params @parent type 
+        * 
+        * return type boolean
+        * 
+        * determines is @parent parentNode of @elem
+        */
+        isParent: function(elem, parent) {
+           while(elem.parentNode !== null){
+               if(elem.parentNode === parent) return true;
+
+               elem = elem.parentNode;
            }
 
-           elem = elem.parentNode;
+           return false;
+       },
+
+       /*
+        * params @elem type 
+        * 
+        * return type @object object
+        * 
+        * determines type of @elem
+        */
+        typeOf: function(elem) {
+           var responce = {
+               simple: false,
+               object: false
+           }
+           var toClass = {}.toString;
+
+           switch(typeof elem) {
+               case "string":
+                   responce.simple = "string";
+                   break;
+               case "number":
+                   responce.simple = "number";
+                   break;
+               case "boolean":
+                   responce.simple = "boolean";
+                   break;
+               case "undefined":
+                   responce.simple = "undefined";
+                   break;
+               case "function":
+                   responce.object = "function";
+                   break;
+               case "object":
+                   var elemType = toClass.call(elem).slice(8, -1).toLowerCase();
+
+                   switch(elemType) {
+                       case "object":
+                           responce.object = "object";
+                           break;
+                       case "number":
+                           responce.object = "number";
+                           break;
+                       case "string":
+                           responce.object = "string";
+                           break;
+                       case "function":
+                           responce.object = "function";
+                           break;
+                       case "array":
+                           responce.object = "array";
+                           break;
+                       case "date":
+                           responce.object = "date";
+                           break;
+                       case "null":
+                           responce.simple = "null";
+                           break;
+                       default:
+                           responce.object = "object";
+                   }
+
+                   if(elemType.indexOf('html') != -1) {
+                       responce.object = "HTML";
+                   }
+
+                   break;
+           }
+
+           return responce;
        }
-
-       return false;
-   }
-   
-   /*
-    * params @elem type 
-    * 
-    * return type @object object
-    * 
-    * determines type of @elem
-    */
-    this.typeOf = function(elem) {
-       var responce = {
-           simple: false,
-           object: false
-       }
-       var toClass = {}.toString;
-
-       switch(typeof elem) {
-           case "string":
-               responce.simple = "string";
-               break;
-           case "number":
-               responce.simple = "number";
-               break;
-           case "boolean":
-               responce.simple = "boolean";
-               break;
-           case "undefined":
-               responce.simple = "undefined";
-               break;
-           case "function":
-               responce.object = "function";
-               break;
-           case "object":
-               var elemType = toClass.call(elem).slice(8, -1).toLowerCase();
-
-               switch(elemType) {
-                   case "object":
-                       responce.object = "object";
-                       break;
-                   case "number":
-                       responce.object = "number";
-                       break;
-                   case "string":
-                       responce.object = "string";
-                       break;
-                   case "function":
-                       responce.object = "function";
-                       break;
-                   case "array":
-                       responce.object = "array";
-                       break;
-                   case "date":
-                       responce.object = "date";
-                       break;
-                   case "null":
-                       responce.simple = "null";
-                       break;
-                   default:
-                       responce.object = "object";
-               }
-
-               if(elemType.indexOf('html') != -1) {
-                   responce.object = "HTML";
-               }
-
-               break;
-       }
-
-       return responce;
    }
     
 })();
+
 /*
  * depends on matchMedia.js
  * 
