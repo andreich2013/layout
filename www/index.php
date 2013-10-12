@@ -25,7 +25,21 @@
     $markup->config->language->setProperty("ru", true)
                              ->setProperty("en", false);
     
+    $markup->router->setRoutes()
+    
 //    $markup->fn->debug($markup);
+    
+    $js = array(
+        "config" => json_encode($markup->config),
+        "server" => json_encode(array(
+            "referer" => $_SERVER["HTTP_REFERER"],
+            "request_uri" => $_SERVER["REQUEST_URI"],
+            'request' => $_REQUEST,
+            'address' => $_SERVER["SERVER_ADDR"],
+        )),
+        "session" => json_encode($_SESSION),
+    );
+    
     
     include ($markup->config->path->root . "/views/layouts/index.php");
 ?>

@@ -3,6 +3,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+
 <!--[if lt IE 9]>
     <script type="text/javascript" src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
@@ -39,40 +42,14 @@
     <link rel="stylesheet" type="text/css" href="/css/style_ie8.css" >
 <![endif]-->
 
+
 <script type="text/javascript">
-    var config = {
-        mail: "<?php echo $markup->config->mail?>",
-        language: {
-            <?php 
-                $i=0;
-                foreach ($markup->config->language as $key=>$item) {
-                    $i++;
-                    $coma = (count($config['url']) == $i) ? "" : ",";
-                    echo $key.': "'.$item.'"'.$coma;
-                }
-            ?>
-        },
-        url: {
-            <?php 
-                $i=0;
-                foreach ($markup->config->url as $key=>$item) {
-                    $i++;
-                    $coma = (count($config['url']) == $i) ? "" : ",";
-                    echo $key.': "'.$item.'"'.$coma;
-                }
-            ?>
-        },
-        path: {
-            <?php 
-                $i=0;
-                foreach ($markup->config->path as $key=>$item) {
-                    $i++;
-                    $coma = (count($config['path']) == $i) ? "" : ",";
-                    echo $key.': "'.$item.'"'.$coma;
-                }
-            ?>
-        }
-    }
+    /*
+     * data for javascript from PHP
+     */
+    <?php foreach ($js as $key=>$value) {?>
+            window["<?php echo $key?>"] = JSON.parse('<? echo $js[$key]?>');
+    <?php }?>
 </script>
 <script type="text/javascript" src="/js/matchMedia/matchMedia.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
