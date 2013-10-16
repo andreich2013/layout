@@ -3,12 +3,13 @@
     require_once "views/scripts/markup.php";
     
     /*
-     * create Singleton Markup with youthfool data
+     * create Singleton Markup with youthfool data for markup
      */
     $markup = Markup::getInstance();
     
     $markup->setProperty("config", new markup_Simple())
-           ->setProperty("fn", new markup_Functions());
+           ->setProperty("fn", new markup_Functions())
+           ->setProperty("router", new markup_Router());
     
     $markup->config->setProperty("url", new markup_Simple())
                    ->setProperty("path", new markup_Simple())
@@ -25,7 +26,14 @@
     $markup->config->language->setProperty("ru", true)
                              ->setProperty("en", false);
     
+    $markup->router->setRoutes(array(
+        "index" => $markup->config->path->root . "/views/layouts/index.php",
+        "about" => $markup->config->path->root . "/views/layouts/about.php",
+        "articles" => $markup->config->path->root . "/views/layouts/articles.php",
+        "contacts" => $markup->config->path->root . "/views/layouts/contacts.php",
+    ));
+    
 //    $markup->fn->debug($markup);
     
-    include ($markup->config->path->root . "/views/layouts/index.php");
+    $markup->router->dispatch();
 ?>

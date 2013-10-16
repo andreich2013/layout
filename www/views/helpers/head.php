@@ -77,5 +77,6 @@
 <script type="text/javascript" src="/js/matchMedia/matchMedia.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.js"></script>
-<script type="text/javascript" src="/js/lib.js"></script>
-<script type="text/javascript" src="/js/start.js"></script>
+<script type="text/javascript" src="/js/lib/lib.js"></script>
+<script type="text/javascript" src="/js/app/common.js"></script>
+<script type="text/javascript" src="/js/app/index.js"></script>
