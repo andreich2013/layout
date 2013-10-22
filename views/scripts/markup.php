@@ -89,8 +89,6 @@ class markup_Router extends markup_Simple {
     protected $routes = array();
     
     protected $current = false;
-    
-    protected $currentRouteName = false;
 
     public function getRoutes($routes = null) {
         if($routes == null || count($routes) == 0) {
@@ -134,8 +132,13 @@ class markup_Router extends markup_Simple {
         if(count($routes) > 0) {
             foreach ($routes as $key => $value) {
                 $this->routes[$key] = $value;
+                $this->routes[$key]["title"] = $key;
             }
         }
+        
+        usort($this->routes, function($a, $b) {
+            return ($a["order"] < $b["order"]) ? -1 : 1;
+        });
         
         return $this;
     }
@@ -145,18 +148,18 @@ class markup_Router extends markup_Simple {
     }
     
     public function getCurrentPage() {
-        return $this->currentRouteName;
+        return $this->current["title"];
     }
     
     public function dispatch() {
         $url = substr($_SERVER["REQUEST_URI"], 1);
         
-        
+//        $fn = new markup_Functions();
+//        $fn->debug($this->routes);        
         
         foreach($this->routes as $key=>$item) {
             if(preg_match($item["pattern"], $url)) {
                 $this->current = $item;
-                $this->currentRouteName = $key;
                 break;
             }
         }
@@ -165,9 +168,6 @@ class markup_Router extends markup_Simple {
             $this->currentRouteName = "404";
             $this->current = $this->routes["404"];
         }
-        
-//        $fn = new markup_Functions();
-//        $fn->debug($this->currentRouteName);
         
         include ($this->current["path"]);
     }

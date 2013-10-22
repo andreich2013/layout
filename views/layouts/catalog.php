@@ -11,7 +11,7 @@
             <div id="content">
                 <?php 
                     $page = $markup->router->getCurrentPage();
-                    $markup->fn->debug($page);
+//                    $markup->fn->debug($page);
                     if($page == "catalog") {
                         echo "каталог";
                     } else if($page == "product") {

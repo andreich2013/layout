@@ -27,21 +27,25 @@
                              ->setProperty("en", false);
     
     $markup->router->setRoutes(array(
-        "index" => array(
-            "path" => $markup->config->path->root . "/views/layouts/index.php",
-            "pattern" => "/^ololo/"
-        ),
         "about" => array(
             "path" => $markup->config->path->root . "/views/layouts/static.php",
-            "pattern" => "/^about/"
+            "pattern" => "/^about/",
+            "order" => 2,
+        ),
+        "catalog" => array(
+            "path" => $markup->config->path->root . "/views/layouts/catalog.php",
+            "pattern" => "/^catalog/",
+            "order" => 4,
         ),
         "product" => array(
             "path" => $markup->config->path->root . "/views/layouts/catalog.php",
-            "pattern" => "/^catalog\/(\d+)/"
+            "pattern" => "/^catalog\/(\d+)/",
+            "order" => 3,
         ),
-        "zatalog" => array(
-            "path" => $markup->config->path->root . "/views/layouts/catalog.php",
-            "pattern" => "/^catalog/"
+        "index" => array(
+            "path" => $markup->config->path->root . "/views/layouts/index.php",
+            "pattern" => "/^ololo/",
+            "order" => 1,
         ),
     ));
     
