@@ -57,6 +57,10 @@
         "REQUEST_URI" => json_encode($_SERVER["REQUEST_URI"]),
         "REQUEST_TIME" => json_encode($_SERVER["REQUEST_TIME"]),
         "HTTP_REFERER" => json_encode($_SERVER["HTTP_REFERER"]),
+        "router" => json_encode(array(
+            "routes" => $markup->router->getRoutes(),
+            "currentRoute" => $markup->router->getCurrentRoute(),
+        )),
     ));
     
     $markup->router->dispatch();

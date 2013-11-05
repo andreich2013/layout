@@ -86,10 +86,28 @@ class markup_Router extends markup_Simple {
         $this->setRoutes($routes);
     }
     
-    protected $routes = array();
+    protected $routes = array(
+        "404" => array(
+            "title" => "404",
+            "path" => "",
+            "order" => 999999,
+        ),
+    );
     
     protected $current = false;
 
+    protected function findRoute($routeName) {
+        $newRoute = null;
+        
+        foreach($this->routes as $item) {
+            if($item['title'] == $routeName) {
+                $newRoute = $item;
+            }
+        }
+        
+        return $newRoute;
+    }
+    
     public function getRoutes($routes = null) {
         if($routes == null || count($routes) == 0) {
             return $this->routes;
@@ -106,6 +124,20 @@ class markup_Router extends markup_Simple {
         }
         
         return (count($responce) > 0) ? $responce : false;
+    }
+    
+    public function getRoute($routeName = null) {
+        if($routes == null) return null;
+        
+        return (key_exists($routeName, $this->routes)) ? $this->routes[$routeName] : null;
+    }
+    
+    public function getRoutePath($routeName = null) {
+        if($routeName == null) return null;
+        
+        $route = $this->findRoute($routeName);
+        
+        return !!$route['url'] ? $route['url'] : null;
     }
     
     public function deleteRoutes($routes = null) {
@@ -154,35 +186,31 @@ class markup_Router extends markup_Simple {
     public function dispatch() {
         $url = substr($_SERVER["REQUEST_URI"], 1);
         
-//        $fn = new markup_Functions();
-//        $fn->debug($this->routes);        
+        if(strstr($url, "?")) {
+            $url = substr($url, 0, strpos($url, "?"));
+        }
         
         foreach($this->routes as $key=>$item) {
-            if(preg_match($item["pattern"], $url)) {
+            if($url == "" && $item["title"] == "index") {
+                $this->current = $item;
+                break;
+            }
+            
+            if(!!$item["pattern"] && preg_match($item["pattern"], $url)) {
                 $this->current = $item;
                 break;
             }
         }
-        
+//        $fn = new markup_Functions();
+//        $fn->debug($this->current);
         if(!$this->current) {
             $this->currentRouteName = "404";
-            $this->current = $this->routes["404"];
+            $this->current = $this->routes[count($this->routes)-1];
+            
         }
-        
+                
         include ($this->current["path"]);
     }
 }
-
-/*----------------------------------ITEMS-------------------------------------*/
-
-class markup_Items {
-    
-    public function __construct() 
-    {
-        
-    }
-}
-
-
 
 ?>

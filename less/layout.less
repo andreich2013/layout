@@ -3,14 +3,26 @@
 
 @import 'reset.less';
 
+html{
+    height: 100% !important;
+}
+
 body{
-    font: normal 62.5% tahoma, arial, verdana, sans-serif;
-    -webkit-text-size-adjust: 62.5%;
-        -ms-text-size-adjust: 62.5%;
+    height: 100% !important;
+    font: normal 62.5% "PT Serif", tahoma, arial, verdana, sans-serif;
+    -webkit-text-size-adjust: none;
+        -ms-text-size-adjust: none;
+    background: @bodyBgColor;
+}
+
+main {
+    min-height: 100% !important;
 }
 
 @import 'print.less';
+@import 'fonts.less';
 @import 'form.less';
+@import 'media.less';
 
 
 /*==================================TITLE=====================================*/

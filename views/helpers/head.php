@@ -51,7 +51,6 @@
         markup["<?php echo $key?>"] = JSON.parse('<?php echo $value?>');
     <?php }?>
         
-    console.log(markup);
 </script>
 <script type="text/javascript" src="/js/matchMedia/matchMedia.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
