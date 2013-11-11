@@ -20,24 +20,32 @@
     /*
      * hack for IEMobile 10
      */
-    if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
-        var msViewportStyle = document.createElement("style");
-        msViewportStyle.appendChild(
-            document.createTextNode(
-                "@-ms-viewport{width:auto!important}"
-            )
-        );
-        document.getElementsByTagName("head")[0].
-            appendChild(msViewportStyle);
-    }
+    (function() {
+        
+        if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
+            var msViewportStyle = document.createElement("style");
+            msViewportStyle.appendChild(
+                document.createTextNode(
+                    "@-ms-viewport{width:auto!important}"
+                )
+            );
+            document.getElementsByTagName("head")[0].
+                appendChild(msViewportStyle);
+        }
+        
+    })();
 </script>
 
+<link rel="stylesheet" type="text/css" href="/fonts/font-awesome/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css">
 <!--[if IE]>
     <link rel="stylesheet" type="text/css" href="/css/style_ie.css" >
 <![endif]-->
-<!--[if lte IE 8]>
+<!--[if IE 8]>
     <link rel="stylesheet" type="text/css" href="/css/style_ie8.css" >
+<![endif]-->
+<!--[if IE 7]>
+    <link rel="stylesheet" type="text/css" href="/fonts/font-awesome/css/font-awesome-ie7.min.css">
 <![endif]-->
 
 <script type="text/javascript">
@@ -54,7 +62,7 @@
 </script>
 <script type="text/javascript" src="/js/matchMedia/matchMedia.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script type="text/javascript" src="/js/lib/lib.js"></script>
 <script type="text/javascript" src="/js/app/common.js"></script>
 <script type="text/javascript" src="/js/app/index.js"></script>

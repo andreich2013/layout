@@ -39,7 +39,7 @@
         ),
         "product" => array(
             "path" => $markup->config->path->root . "/views/layouts/catalog.php",
-            "pattern" => "/^catalog\/(\d+)/",
+            "pattern" => "/^catalog/",
             "order" => 3,
         ),
         "index" => array(
