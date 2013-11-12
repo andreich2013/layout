@@ -9,19 +9,16 @@ window.lib = (function() {
         space: /\s+/
     },
     isTouch = !!('ontouchstart' in window) ||
-                  !!(('msMaxTouchPoints' in window.navigator) && !('onmouseover' in window));
+              !!(('msMaxTouchPoints' in window.navigator) && !('onmouseover' in window));
+    
+    function getObjectType(elem) {
+        return toClass.call(elem).slice(8, -1).toLowerCase();
+    }
     
     return {
     
         touch: isTouch,
 
-        /**
-        * @param {object} window.event
-        * 
-        * @returns {window.event}
-        *
-        * crossbrowser window.event
-        */
         fixEvent: function(e) {
             e = e || window.event;
 
@@ -123,13 +120,53 @@ window.lib = (function() {
 
         getTime: Date.now || function getTime () { return new Date().getTime(); },
 
-        get: function(query, elem) {
-            return (elem || document).querySelectorAll(query);
+        get: function(query, elem, isFirst) {
+            return (elem || document)[(!!isFirst ? 'querySelector' : 'querySelectorAll')](query);
         },
+        
+        next: (function() {
+            
+            var isNative = document.documentElement.nextElementSibling !== undefined;
+            
+            function native(elem) {
+                return elem.nextElementSibling;
+            }
+            
+            function emulate(elem) {
+                var current = elem.nextSibling;
 
-        getFirst: function(query, elem) {
-            return (elem || document).querySelector(query);
-        },
+                while(current && current.nodeType != 1) {
+                  current = current.nextSibling;
+                }
+
+                return current;
+            }
+            
+            return !!isNative ? native : emulate;
+                
+        })(),
+        
+        prev: (function() {
+            
+            var isNative = document.documentElement.previousElementSibling !== undefined;
+            
+            function native(elem) {
+                return elem.previousElementSibling;
+            }
+            
+            function emulate(elem) {
+                var current = elem.previousSibling;
+
+                while(current && current.nodeType != 1) {
+                  current = current.previousSibling;
+                }
+
+                return current;
+            }
+            
+            return !!isNative ? native : emulate;
+                
+        })(),
 
         addClass: function( el, nameClass ) {
 
@@ -178,14 +215,6 @@ window.lib = (function() {
 
         },
 
-        /**
-         * Удалить класс.
-         *
-         * @param {HTMLElement} el требуемый элемент.
-         * @param {String} nameClass имя, которое требуется удалить.
-         *
-         * @return {String|Boolean} удаляемое имя класса или ложь.
-         */
         removeClass: function( el, nameClass ) {
 
             // Получить список классов.
@@ -223,35 +252,13 @@ window.lib = (function() {
                 }
 
             }
+            
             el.className = classListNew.join( ' ' );
 
             return nameClass;
 
         },
 
-        /**
-         * Переключить класс.
-         *
-         * @param {HTMLElement} el требуемый элемент.
-         * @param {String} nameClass имя, которое требуется переключить.
-         */
-        toggleClass: function( el, nameClass ) {
-
-            this.hasClass(el, nameClass) ?
-                this.removeClass(el, nameClass) :
-                this.addClass(el, nameClass);
-
-        },
-
-        /**
-         * Проверить класс.
-         *
-         * @param {HTMLElement} el требуемый элемент.
-         * @param {String} nameClass имя, которое требуется проверить.
-         *
-         * @return {Boolean} если имя класса найдено, возвращает истину,
-         * иначе ложь.
-         */
         hasClass: function( el, nameClass ) {
 
             // Получить список классов.
@@ -287,92 +294,97 @@ window.lib = (function() {
 
         },
 
-       /**
-        * params @elem type 
-        * params @parent type 
-        * 
-        * return type boolean
-        * 
-        * determines is @parent parentNode of @elem
-        */
+        toggleClass: function( el, nameClass ) {
+
+            this.hasClass(el, nameClass) ?
+                this.removeClass(el, nameClass) :
+                this.addClass(el, nameClass);
+
+        },
+
         isParent: function(elem, parent) {
-           while(elem.parentNode !== null){
-               if(elem.parentNode === parent) return true;
+            while(elem.parentNode !== null){
+                if(elem.parentNode === parent) return true;
 
-               elem = elem.parentNode;
-           }
-
-           return false;
-       },
-
-       /**
-        * params @elem type 
-        * 
-        * return type @object object
-        * 
-        * determines type of @elem
-        */
-        typeOf: function(elem) {
-           var responce = {
-               simple: false,
-               object: false
-           }
-           var toClass = {}.toString;
-
-           switch(typeof elem) {
-               case "string":
-                   responce.simple = "string";
-                   break;
-               case "number":
-                   responce.simple = "number";
-                   break;
-               case "boolean":
-                   responce.simple = "boolean";
-                   break;
-               case "undefined":
-                   responce.simple = "undefined";
-                   break;
-               case "function":
-                   responce.object = "function";
-                   break;
-               case "object":
-                   var elemType = toClass.call(elem).slice(8, -1).toLowerCase();
-
-                   switch(elemType) {
-                       case "object":
-                           responce.object = "object";
-                           break;
-                       case "number":
-                           responce.object = "number";
-                           break;
-                       case "string":
-                           responce.object = "string";
-                           break;
-                       case "function":
-                           responce.object = "function";
-                           break;
-                       case "array":
-                           responce.object = "array";
-                           break;
-                       case "date":
-                           responce.object = "date";
-                           break;
-                       case "null":
-                           responce.simple = "null";
-                           break;
-                       default:
-                           responce.object = "object";
-                   }
-
-                   if(elemType.indexOf('html') != -1) {
-                       responce.object = "HTML";
-                   }
-
-                   break;
+                elem = elem.parentNode;
             }
 
-            return responce;
+            return false;
         },
+
+        isArray: function(elem) {
+            return getObjectType(elem) == 'array';
+        },
+        
+        isFunction: function(elem) {
+            return getObjectType(elem) == 'function';
+        },
+        
+        isObject: function(elem) {
+            return getObjectType(elem) == 'object';
+        },
+
+        typeOf: function(elem) {
+            var responce = {
+                simple: false,
+                object: false
+            }
+            
+            switch(typeof elem) {
+                case "string":
+                    responce.simple = "string";
+                    break;
+                case "number":
+                    responce.simple = "number";
+                    break;
+                case "boolean":
+                    responce.simple = "boolean";
+                    break;
+                case "undefined":
+                    responce.simple = "undefined";
+                    break;
+                case "function":
+                    responce.object = "function";
+                    break;
+                case "object":
+                    var objType = getObjectType(elem);
+
+                    if(objType.nodeName == 1) {
+                        responce.object = "node";
+                        break;
+                    }
+
+                    switch(objType) {
+                        case "object":
+                            responce.object = "object";
+                            break;
+                        case "number":
+                            responce.object = "number";
+                            break;
+                        case "string":
+                            responce.object = "string";
+                            break;
+                        case "function":
+                            responce.object = "function";
+                            break;
+                        case "array":
+                            responce.object = "array";
+                            break;
+                        case "date":
+                            responce.object = "date";
+                            break;
+                        case "null":
+                            responce.simple = "null";
+                            break;
+                        default:
+                            responce.object = "object";
+                    }
+
+                    break;
+             }
+
+             return responce;
+         },
               
         /**
         * we can add this object like prototype to handlers objects
@@ -445,7 +457,6 @@ window.lib = (function() {
 
             document.cookie = updatedCookie;
        }
-
 
     }
     

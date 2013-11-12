@@ -41,16 +41,33 @@ if( !!device.touch ) {
     })( this );
 }
 
-document.DOMContentLoaded = function() {
+// не работает в ie8
+lib.addEvent(document, 'DOMContentLoaded', function() {
+    
+});
+
+$(document).on('ready', function() {
     
     device.decorateHtml();
+
+    window.hidePagePreloader = (function() {
+        var preloader = lib.get(".page-preloader", null, true),
+            isHidden = false;
+            
+        return function() {
+            if(!!preloader && !isHidden) {
+                preloader.style.display = 'none';
+                isHidden = true;
+            }
+        }
+    })();
     
-};
+});
 
-window.onload = function() {
+lib.addEvent(window, 'load', function() {
+    hidePagePreloader();
+});
+
+lib.addEvent(window, 'resize', function() {
     
-};
-
-window.onresize = function() {
-
-};
+});
