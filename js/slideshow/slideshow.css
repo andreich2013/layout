@@ -1,0 +1,97 @@
+.slideshow-wrapper{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.slideshow-wrapper .slides{
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.slideshow-wrapper .slides .slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 50;
+    
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+}
+
+.slideshow-wrapper .slides.fade .slide {
+    opacity: 0;
+    
+    height: auto;
+    overflow: auto;
+    visibility: visible;
+}
+
+.slideshow-wrapper .slides .slide.current {
+    position: relative;
+    z-index: 51;
+    
+    height: auto;
+    overflow: auto;
+    visibility: visible;
+}
+
+.slideshow-wrapper .slides.fade .slide.current {
+    opacity: 1;
+}
+
+.slideshow-wrapper .navigation{
+    z-index: 52;
+}
+.slideshow-wrapper .navigation .thumbs .thumb{
+    overflow: hidden;
+    margin: 5px;
+    cursor: pointer;
+    border: 2px solid red;
+}
+.slideshow-wrapper .navigation .thumbs .thumb img{
+    float: left; 
+}
+.slideshow-wrapper .navigation .pagination{
+    text-align: center;
+    margin: 4px 0 0 0;
+    z-index: 52;
+}
+.slideshow-wrapper .navigation .pagination .page{
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    overflow: hidden;
+    margin: 0 5px;
+    cursor: pointer;
+    background: url(../img/paginate.png) no-repeat 0 0;
+}
+.slideshow-wrapper .navigation .pagination .page.current{
+    background: url(../img/paginate_current.png) no-repeat 0 0;
+}
+.slideshow-wrapper .next, 
+.slideshow-wrapper .prev {
+    position: absolute;
+    z-index: 52;
+    width: 80px;
+    height: 80px;
+    top: 50%;
+    margin-top: -40px;
+    cursor: pointer;
+}
+.slideshow-wrapper .next {
+    background: url(img/next.png) left top no-repeat;
+}
+.slideshow-wrapper .next.disable {
+    background: url(img/next-disable.png) left top no-repeat;
+}
+.slideshow-wrapper .prev {
+    background: url(img/prev.png) left top no-repeat;
+}
+.slideshow-wrapper .prev.disable {
+    background: url(img/prev-disable.png) left top no-repeat;
+}

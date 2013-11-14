@@ -12,7 +12,7 @@ window.lib = (function() {
               !!(('msMaxTouchPoints' in window.navigator) && !('onmouseover' in window));
     
     function getObjectType(elem) {
-        return toClass.call(elem).slice(8, -1).toLowerCase();
+        return {}.toString.call(elem).slice(8, -1).toLowerCase();
     }
     
     return {
@@ -79,46 +79,75 @@ window.lib = (function() {
             return e;
         },
 
-        addEvent: function(el, event, func) {
-            if ( el.addEventListener ) {
-                el.addEventListener(event, func, false);
-                return;
+        addEvent: (function(){
+            
+            function native(el, event, fn) {
+                el.addEventListener(event, fn, false);
             }
-
-            if ( el.attachEvent ) {
+            
+            function emulate(el, event, fn) {
                 el.detachEvent('on'+ event, function(e) {
-                    func.call(el, e);
+                    fn.call(el, e);
                 });
                 el.attachEvent('on'+ event, function(e) {
-                    func.call(el, e);
+                    fn.call(el, e);
                 });
-                return;
+            }
+            
+            function old(el, event, fn) {
+                el['on'+ event] = fn;
+            }
+            
+            if('addEventListener' in window) {
+                return native;
+            } else if('attachEvent' in window) {
+                return emulate;
+            } else {
+                return old;
+            }
+            
+        })(),
+
+        removeEvent: (function() {
+
+            function native(el, event, fn) {
+                el.removeEventListener(event, fn, false);
+            }
+            
+            function emulate(el, event, fn) {
+                el.detachEvent('on'+ event, fn);
             }
 
-            el['on'+ event] = func;
-        },
-
-        removeEvent: function(el, event, func) {
-
-            if ( el.removeEventListener ) {
-                el.removeEventListener(event, func, false);
-                return;
+            function old(el, event, fn) {
+                el['on'+ event] = null;
             }
 
-            if ( el.detachEvent ) {
-                el.detachEvent('on'+ event, func);
-                return;
+            if('removeEventListener' in window) {
+                return native;
+            } else if('detachEvent' in window) {
+                return emulate;
+            } else {
+                return old;
             }
 
-            el['on'+ event] = null;
-
-        },
+        })(),
 
         getStyle: function( elem ) {
             return elem.currentStyle || window.getComputedStyle(elem, null);
         },
 
-        getTime: Date.now || function getTime () { return new Date().getTime(); },
+        getTime: (function() {
+            
+            function native() {
+                return Date.now;
+            }
+            
+            function emulate() {
+                return new Date().getTime();
+            }
+            
+            return ('now' in Date) ? native : emulate;
+        }),
 
         get: function(query, elem, isFirst) {
             return (elem || document)[(!!isFirst ? 'querySelector' : 'querySelectorAll')](query);
@@ -312,16 +341,24 @@ window.lib = (function() {
             return false;
         },
 
+        isNodeList: function(elem) {
+            return getObjectType(elem) === 'nodelist';
+        },
+
         isArray: function(elem) {
-            return getObjectType(elem) == 'array';
+            return getObjectType(elem) === 'array';
         },
         
         isFunction: function(elem) {
-            return getObjectType(elem) == 'function';
+            return getObjectType(elem) === 'function';
         },
         
         isObject: function(elem) {
-            return getObjectType(elem) == 'object';
+            return getObjectType(elem) === 'object';
+        },
+        
+        isTagNode: function(elem) {
+            return !!elem.nodeType && elem.nodeType === 1;
         },
 
         typeOf: function(elem) {
@@ -466,8 +503,6 @@ window.lib = (function() {
  * depends on matchMedia.js
  * 
  * Singleton
- * 
- * @returns {window.determinesDevice.responce}
  */
 (function(matchMedia) {
     var instance;
