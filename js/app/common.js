@@ -41,13 +41,7 @@ if( !!device.touch ) {
     })( this );
 }
 
-// не работает в ie8
-lib.addEvent(document, 'DOMContentLoaded', function() {
-    
-});
-
-$(document).on('ready', function() {
-    
+lib.onDOMready(function() {
     device.decorateHtml();
 
     window.hidePagePreloader = (function() {
@@ -61,7 +55,6 @@ $(document).on('ready', function() {
             }
         }
     })();
-    
 });
 
 lib.addEvent(window, 'load', function() {

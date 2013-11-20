@@ -38,7 +38,6 @@
 
 <link rel="stylesheet" type="text/css" href="/fonts/font-awesome/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="/css/style.css">
-<link rel="stylesheet" type="text/css" href="/js/slideshow/slideshow.css">
 <!--[if IE]>
     <link rel="stylesheet" type="text/css" href="/css/style_ie.css" >
 <![endif]-->
@@ -84,13 +83,12 @@
     })();
 
     <?php foreach ($markup->exportToJS as $key => $value) {?>
-        markup["<?php echo $key?>"] = JSON.parse('<?php echo $value?>');
+//        markup["<?php echo $key?>"] = JSON.parse('<?php echo $value?>');
     <?php }?>
         
 </script>
-<!--<script type="text/javascript" src="/js/matchMedia/matchMedia.min.js"></script>-->
-<!--<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
-<!--<script type="text/javascript" src="/js/lib/lib.js"></script>-->
-<!--<script type="text/javascript" src="/js/app/common.js"></script>-->
-<!--<script type="text/javascript" src="/js/app/index.js"></script>-->
-<script type="text/javascript" src="/js/slideshow/slideshow.js"></script>
+<script type="text/javascript" src="/js/matchMedia/matchMedia.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript" src="/js/lib/lib.js"></script>
+<script type="text/javascript" src="/js/app/common.js"></script>
+<script type="text/javascript" src="/js/app/index.js"></script>

@@ -76,6 +76,8 @@
                     (!!$once) ? require_once $dir . $file : include $dir . $file;
                 }
             }
+            
+            return $this;
 
         }
 
@@ -91,6 +93,8 @@
                 }
 
             }
+            
+            return $this;
 
         }
 

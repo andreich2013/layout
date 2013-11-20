@@ -2,9 +2,10 @@
     require_once "app/scripts/Autoloader.php";
     
     $autoloader = new markup_Autoloader();
-    $autoloader->loadFilesFromDir(getenv('DOCUMENT_ROOT') . '/app/scripts/', true);
-    $autoloader->loadFilesFromDir(getenv('DOCUMENT_ROOT') . '/app/models/', true);
-    $autoloader->loadFilesFromDir(getenv('DOCUMENT_ROOT') . '/app/controllers/', true);
+    $autoloader ->loadFilesFromDir(getenv('DOCUMENT_ROOT') . '/app/scripts/', true)
+                ->loadFilesFromDir(getenv('DOCUMENT_ROOT') . '/app/models/', true)
+                ->loadFilesFromDir(getenv('DOCUMENT_ROOT') . '/app/controllers/', true)
+                ->loadFilesFromDir(getenv('DOCUMENT_ROOT') . '/app/data/', true);
     
     /*
      * create Singleton Markup with youthfool data for markup

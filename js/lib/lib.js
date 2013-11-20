@@ -15,12 +15,6 @@ window.lib = (function() {
         return {}.toString.call(elem).slice(8, -1).toLowerCase();
     }
     
-//    function () {
-//        
-//    }
-    
-//    var _class = ();
-    
     return {
     
         touch: isTouch,
@@ -155,7 +149,7 @@ window.lib = (function() {
 
         })(),
 
-        // nodes
+        // DOM
 
         get: function(query, elem, isFirst) {
             return (elem || document)[(!!isFirst ? 'querySelector' : 'querySelectorAll')](query);
@@ -375,6 +369,62 @@ window.lib = (function() {
 
             return false;
         },
+        
+        onDOMready: (function () {
+
+                var called = false,
+                    html = document.documentElement,
+                    handlers = [];
+
+                function ready() {
+                        if (called) {
+                            return;
+                        }
+                        
+                        called = true;
+                        
+                        for(var i = 0, length = handlers.length; i < length; i++) {
+                            handlers[i]();
+                        }
+                }
+
+                function addHandler(handler) {
+                    handlers.push(handler);
+                }
+
+                function tryScroll(){
+                    if (called) {
+                        return;
+                    }
+                    
+                    if (!document.body) {
+                        return;
+                    }
+                    
+                    try {
+                        html.doScroll("left");
+                        ready();
+                    } catch(e) {
+                        setTimeout(tryScroll, 0);
+                    }
+                }
+
+                if ( document.addEventListener ) { 
+                    document.addEventListener( "DOMContentLoaded", ready, false );
+                } else if ( document.attachEvent ) {
+                    if ( document.documentElement.doScroll && window == window.top ) {
+                        tryScroll();
+                    }
+
+                    document.attachEvent("onreadystatechange", function(){
+                        if ( document.readyState === "complete" ) {
+                            ready();
+                        }
+                    });
+                }
+                
+                return addHandler;
+        })(),
 
         // determine type
 
