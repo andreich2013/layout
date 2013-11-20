@@ -7,8 +7,8 @@ var Slideshow = (function() {
     
     var utilites = (function() {
         
-        isTouch = !!('ontouchstart' in window) ||
-                  !!(('msMaxTouchPoints' in window.navigator) && !('onmouseover' in window));
+        var isTouch = !!('ontouchstart' in window) ||
+                      !!(('msMaxTouchPoints' in window.navigator) && !('onmouseover' in window));
 
         function getObjectType(elem) {
             return {}.toString.call(elem).slice(8, -1).toLowerCase();
@@ -608,13 +608,13 @@ var Slideshow = (function() {
             if(!!this.isNodeList(elem)) {
                 
                 for (var i = 0, length = elem.length; i < length; i++) {
-                    elem[i].style[transition.string] = 'All 2s linear 0s';   
+                    elem[i].style[transition.string] = 'All 0.4s linear 0s';   
                     console.log(elem[i].style[transition.string]);
                 }
                 
             } else if(this.isTagNode(elem)) {
                 
-                elem.style[transition.string] = 'All 2s linear 0s';
+                elem.style[transition.string] = 'All 0.4s linear 0s';
                 
             }
             

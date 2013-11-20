@@ -1,17 +1,18 @@
+<?php $markup = Markup::getInstance();?>
 <!DOCTYPE HTML>
 <html>
     <head>
-        <?php include ($markup->config->path->root . "/views/helpers/head.php")?>
+        <?php $this->render('helpers/head.php');?>
     </head>
     <body>
-        <?php // include ($markup->config->path->root . "/views/helpers/page-preloader.php")?>
+        <?php $this->render('helpers/helpers/page-preloader.php');?>
         <main>
             <header>
 
             </header>
             <div id="content">
                 <div id="slider">
-                    <div class="slideshow-wrapper">
+                    <div class="slideshow-wrapper wrapper">
                         <div class="slides">
                             <div class="slide" data-index="0">
                                 <img src="/js/slideshow/img/ezio.jpg" alt="">

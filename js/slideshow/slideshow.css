@@ -33,7 +33,7 @@
 
 .slideshow-wrapper .slides .slide.current {
     position: relative;
-    z-index: 51;
+    z-index: 50;
     
     height: auto;
     overflow: auto;

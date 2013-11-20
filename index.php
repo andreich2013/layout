@@ -1,6 +1,10 @@
 <?php 
-    require_once "views/scripts/deviceDetect.php";
-    require_once "views/scripts/markup.php";
+    require_once "app/scripts/Autoloader.php";
+    
+    $autoloader = new markup_Autoloader();
+    $autoloader->loadFilesFromDir(getenv('DOCUMENT_ROOT') . '/app/scripts/', true);
+    $autoloader->loadFilesFromDir(getenv('DOCUMENT_ROOT') . '/app/models/', true);
+    $autoloader->loadFilesFromDir(getenv('DOCUMENT_ROOT') . '/app/controllers/', true);
     
     /*
      * create Singleton Markup with youthfool data for markup
@@ -28,23 +32,18 @@
     
     $markup->router->setRoutes(array(
         "about" => array(
-            "path" => $markup->config->path->root . "/views/layouts/static.php",
+            "action" => 'static',
             "pattern" => "/^about/",
             "order" => 2,
         ),
         "catalog" => array(
-            "path" => $markup->config->path->root . "/views/layouts/catalog.php",
+            "action" => 'catalog',
             "pattern" => "/^catalog/",
             "order" => 4,
         ),
-        "product" => array(
-            "path" => $markup->config->path->root . "/views/layouts/catalog.php",
-            "pattern" => "/^catalog/",
-            "order" => 3,
-        ),
         "index" => array(
-            "path" => $markup->config->path->root . "/views/layouts/index.php",
-            "pattern" => "/^ololo/",
+            "action" => 'index',
+            "pattern" => "/^index/",
             "order" => 1,
         ),
     ));
@@ -53,14 +52,8 @@
     
     $markup->setProperty("exportToJS", array(
         "config" => json_encode($markup->config),
-        "REQUEST" => json_encode($_REQUEST),
-        "REQUEST_URI" => json_encode($_SERVER["REQUEST_URI"]),
-        "REQUEST_TIME" => json_encode($_SERVER["REQUEST_TIME"]),
         "HTTP_REFERER" => json_encode($_SERVER["HTTP_REFERER"]),
-        "router" => json_encode(array(
-            "routes" => $markup->router->getRoutes(),
-            "currentRoute" => $markup->router->getCurrentRoute(),
-        )),
+        "currentRoute" => $markup->router->getCurrentRoute(),
     ));
     
     $markup->router->dispatch();

@@ -15,9 +15,32 @@ window.lib = (function() {
         return {}.toString.call(elem).slice(8, -1).toLowerCase();
     }
     
+//    function () {
+//        
+//    }
+    
+//    var _class = ();
+    
     return {
     
         touch: isTouch,
+        
+        // date
+        
+        getTime: (function() {
+            
+            function native() {
+                return Date.now;
+            }
+            
+            function emulate() {
+                return new Date().getTime();
+            }
+            
+            return ('now' in Date) ? native : emulate;
+        }),
+        
+        // events
 
         fixEvent: function(e) {
             e = e || window.event;
@@ -132,22 +155,7 @@ window.lib = (function() {
 
         })(),
 
-        getStyle: function( elem ) {
-            return elem.currentStyle || window.getComputedStyle(elem, null);
-        },
-
-        getTime: (function() {
-            
-            function native() {
-                return Date.now;
-            }
-            
-            function emulate() {
-                return new Date().getTime();
-            }
-            
-            return ('now' in Date) ? native : emulate;
-        }),
+        // nodes
 
         get: function(query, elem, isFirst) {
             return (elem || document)[(!!isFirst ? 'querySelector' : 'querySelectorAll')](query);
@@ -197,6 +205,33 @@ window.lib = (function() {
                 
         })(),
 
+        getStyle: (function() {
+            
+            function native(elem) {
+                return window.getComputedStyle(elem, null)
+            }
+            
+            function emulate(elem) {
+                return elem.currentStyle;
+            }
+            
+            return ('getComputedStyle' in window) ? native : emulate;
+        })(),
+        
+        after: function (elem, referenceElem) {
+            return referenceElem.parentNode.insertBefore(elem, this.next(referenceElem));
+        },
+        
+        before: function(elem, referenceElem) {
+            return referenceElem.parentNode.insertBefore(elem, referenceElem);
+        },
+
+        removeChildren: function (elem) {
+            while(elem.lastChild) {
+                elem.removeChild(elem.lastChild);
+            }
+        },
+        
         addClass: function( el, nameClass ) {
 
             // Получить список классов.
@@ -341,6 +376,8 @@ window.lib = (function() {
             return false;
         },
 
+        // determine type
+
         isNodeList: function(elem) {
             return getObjectType(elem) === 'nodelist';
         },
@@ -457,6 +494,8 @@ window.lib = (function() {
                 }
             }
         },
+        
+        // cookie
         
         getCookie: function(name) {
             var matches = document.cookie.match(new RegExp(

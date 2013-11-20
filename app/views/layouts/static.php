@@ -1,7 +1,8 @@
+<?php $markup = Markup::getInstance();?>
 <!DOCTYPE HTML>
 <html>
     <head>
-        <?php include ($markup->config->path->root . "/views/helpers/head.php")?>
+        <?php $this->render('helpers/head.php');?>
     </head>
     <body>
         <main>

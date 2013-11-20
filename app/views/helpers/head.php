@@ -54,13 +54,6 @@
     
     var request = (function() {
         
-        var responce = {
-            search: parseLocationSearch(),
-            host: window.location.hostname,
-            pathname: window.location.pathname,
-            hash: window.location.hash
-        };
-        
         function parseLocationSearch() {
         
             var search = window.location.search,
@@ -81,7 +74,12 @@
             return request;
         }
         
-        return responce;
+        return {
+            search: parseLocationSearch(),
+            host: window.location.hostname,
+            pathname: window.location.pathname,
+            hash: window.location.hash
+        };
         
     })();
 
