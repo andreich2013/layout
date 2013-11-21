@@ -50,40 +50,8 @@
 
 <script type="text/javascript">
     var markup = {};
-    
-    var request = (function() {
-        
-        function parseLocationSearch() {
-        
-            var search = window.location.search,
-                request = {};
-
-            if(search.length == 0) {
-                return request;
-            }
-
-            var searchArr = window.location.search.substring(1).split('&');
-            searchArr.splice(searchArr.indexOf(''), 1);
-
-            for(var i = 0, length = searchArr.length; i < length; i++) {
-                var tmpArr = searchArr[i].split('=');
-                request[tmpArr[0]] = tmpArr[1];
-            }
-
-            return request;
-        }
-        
-        return {
-            search: parseLocationSearch(),
-            host: window.location.hostname,
-            pathname: window.location.pathname,
-            hash: window.location.hash
-        };
-        
-    })();
-
     <?php foreach ($markup->exportToJS as $key => $value) {?>
-//        markup["<?php echo $key?>"] = JSON.parse('<?php echo $value?>');
+        markup["<?php echo $key?>"] = JSON.parse('<?php echo $value?>');
     <?php }?>
         
 </script>

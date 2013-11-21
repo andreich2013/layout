@@ -1,24 +1,19 @@
+<?php $markup = Markup::getInstance();?>
 <!DOCTYPE HTML>
 <html>
     <head>
-        <?php include ($markup->config->path->root . "/views/helpers/head.php")?>
+        <?php echo $this->render('helpers/head.php');?>
     </head>
     <body>
         <main>
+            <?php echo $this->render('helpers/page-preloader.php');?>
             <header>
 
             </header>
             <div id="content">
                 <?php 
-                    $page = $markup->router->getCurrentPage();
-//                    $markup->fn->debug($page);
-                    if($page == "catalog") {
-                        echo "каталог";
-                    } else if($page == "product") {
-                        echo "продукт";
-                    }
+                    echo $context->layout;
                 ?>
-                каталог
             </div>
             <footer>
                 

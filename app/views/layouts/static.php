@@ -11,7 +11,9 @@
 
             </header>
             <div id="content">
-                статика
+                <?php 
+                    echo $context->layout;
+                ?>
             </div>
             <footer>
                 

@@ -10,8 +10,8 @@
 
         protected $routes = array(
             "404" => array(
+                "action" => "page404",
                 "title" => "404",
-                "path" => "",
                 "order" => 999999,
             ),
         );
@@ -127,11 +127,7 @@
             if(!$this->current) {
                 $this->currentRouteName = "404";
                 $this->current = $this->routes[count($this->routes)-1];
-
             }
-
-    //        $fn = new markup_Functions();
-    //        $fn->debug("views/data/" . $this->current["model"] . "Model.php");
 
             $controller = new markup_FrontendController($this->current);
             $controller->{$this->current["action"] . 'Action'}();

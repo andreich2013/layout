@@ -44,6 +44,8 @@ if( !!device.touch ) {
 lib.onDOMready(function() {
     device.decorateHtml();
 
+    window.GracefulDegradation();
+
     window.hidePagePreloader = (function() {
         var preloader = lib.get(".page-preloader", null, true),
             isHidden = false;

@@ -593,81 +593,103 @@ window.lib = (function() {
  * 
  * Singleton
  */
-(function(matchMedia) {
+(function() {
     var instance;
     window.determinesDevice = function() {
-        if (typeof instance !== 'undefined')
+        if (typeof instance !== 'undefined') {
             return instance;
-        
-        var responce = {},
-            ua = navigator.userAgent,
-            patterns = {
-                device: {
-                    IPad: /iPad/i,
-                    IPhone: /iPhone/i,
-                    IPod: /iPod/i,
-                    BlackBerry: /BlackBerry/i,
-                    IEMobile: /IEMobile/i,
-                    Android: /Android/i
-                },
-                browser: {
-                    opera: /Opera[ \/]+\w+\.\w+/i,  
-                    firefox: /Firefox\/\w+\.\w+/i,     
-                    chrome: /Chrome\/\w+\.\w+/i,   
-                    ie: /MSIE *\d+\.\w+/i,       
-                    safari: /Safari\/\w+\.\w+/i
-                }
-            }
+        }
             
-        responce.touch = !!('ontouchstart' in window) ||
-                         !!(('msMaxTouchPoints' in window.navigator) && !('onmouseover' in window));  
+        // determine dependencies
+        var utils = window.lib,
+            matchMedia = window.matchMedia,
+            ua = navigator.userAgent;
         
-        if ( responce.touch ) {
-            responce.type = ( matchMedia('only screen and (max-device-width: 640px) and (max-device-height: 640px)').matches ) 
+        var patterns = {
+            device: {
+                IPad: /iPad/i,
+                IPhone: /iPhone/i,
+                IPod: /iPod/i,
+                BlackBerry: /BlackBerry/i,
+                IEMobile: /IEMobile/i,
+                Android: /Android/i
+            },
+            browser: {
+                opera: /Opera[ \/]+\w+\.\w+/i,  
+                firefox: /Firefox\/\w+\.\w+/i,     
+                chrome: /Chrome\/\w+\.\w+/i,   
+                ie: /MSIE *\d+\.\w+/i,       
+                safari: /Safari\/\w+\.\w+/i
+            }
+        }
+            
+        instance.touch = utils.touch;  
+        
+        if ( instance.touch ) {
+            instance.type = ( matchMedia('only screen and (max-device-width: 640px) and (max-device-height: 640px)').matches ) 
                                 ? "mobile" : "tablet";
         } else {
-            responce.type = "desktop";
+            instance.type = "desktop";
         }
 
         for (var i in patterns.device) {
-            responce["is" + i] = ua.match(patterns.device[i]) != null;
+            instance["is" + i] = ua.match(patterns.device[i]) != null;
         }
 
-        if(responce.isAndroid) {
-            responce.deviceVersion = parseFloat(ua.slice(ua.indexOf("Android")+8));
+        if(instance.isAndroid) {
+            instance.deviceVersion = parseFloat(ua.slice(ua.indexOf("Android")+8));
         }
         
         for (var j in patterns.browser) {
             if(ua.match(patterns.browser[j])) {
-                responce.browser = j;
+                instance.browser = j;
                 break;
             }
         }
 
-        if( responce.touch ) {
-            responce.touchEvents = {
-                start: (responce.isIEMobile) ? "MSPointerDown" : "touchstart",
-                move: (responce.isIEMobile) ? "MSPointerMove" : "touchmove",
-                end: (responce.isIEMobile) ? "MSPointerUp" : "touchend",
-                cancel : (responce.isIEMobile) ? "MSPointerCancel" : "touchcancel",
+        if( instance.touch ) {
+            instance.touchEvents = {
+                start: (instance.isIEMobile) ? "MSPointerDown" : "touchstart",
+                move: (instance.isIEMobile) ? "MSPointerMove" : "touchmove",
+                end: (instance.isIEMobile) ? "MSPointerUp" : "touchend",
+                cancel : (instance.isIEMobile) ? "MSPointerCancel" : "touchcancel",
             }
         }
 
-        responce.decorateHtml = function () {
-            $("body").addClass(responce.browser)
-                     .addClass(responce.type);
+        instance.decorateHtml = function () {
+            var body = lib.get("body", null, true),
+                className = instance.browser + ' ' + instance.type;
 
-             if(responce.isIPad) $("body").addClass("isIPad");
-             if(responce.isIPhone) $("body").addClass("isIPhone");
-             if(responce.isIPod) $("body").addClass("isIPod");
-             if(responce.isBlackBerry) $("body").addClass("isBlackBerry");
-             if(responce.isIEMobile) $("body").addClass("isIEMobile");
-             if(responce.isAndroid) $("body").addClass("isAndroid");
+            if(instance.isIPad) {
+                className += " isIPad";
+            }
+            
+            if(instance.isIPhone) {
+                className += " isIPhone";
+            }
+            
+            if(instance.isIPod) {
+                className += " isIPod";
+            }
+            
+            if(instance.isBlackBerry) {
+                className += " isBlackBerry";
+            }
+            
+            if(instance.isIEMobile) {
+                className += " isIEMobile";
+            }
+            
+            if(instance.isAndroid) {
+                className += " isAndroid";
+            }
+            
+            lib.addClass(className);
         }
         
-        return instance = responce;
+        return instance = instance;
     };
-})(window.matchMedia);
+})();
 
 /**
  * functions depends on jQuery 1.x
@@ -725,10 +747,15 @@ if(window.jQuery) {
     })(window.jQuery);
 }
 
-(function() {
-    window.GracefulDegradation = function() {
-        if(!!GracefulDegradation.initialised) return;
-        
+
+window.GracefulDegradation = (function() {
+
+    var utils = window.lib,
+        initialised = false;
+
+    return function() {
+        if(!!initialised) return;
+
         var inputElem  = document.createElement('input'),
             support = {
                 placeholder: !!("placeholder" in inputElem),
@@ -739,50 +766,40 @@ if(window.jQuery) {
                      (navigator.userAgent.indexOf("Chrome") == -1) &&
                      (navigator.userAgent.indexOf("Opera") == -1);
 
-        init();
-        
         function init() {
-            initForms();
-            GracefulDegradation.initialised = true;
-        }
-        
-        function initForms() {
             var forms = document.forms;
-            
-            for( var i=0, lenF=forms.length; i<lenF; i++ ) {
-                var form = forms[i];
 
-                for( var j=0, lenE=form.elements.length; j<lenE; j++ ) {
-                    var elem = form.elements[j];
-
-                    if(!!elem.getAttribute("placeholder") && (isIOS || safari || !support.placeholder)) {
-                        emulatePlaceholder.call(elem);
-                    } 
-
-                    if((elem.type.toLowerCase() == "submit" ||
-                       elem.type.toLowerCase() == "button") && (isIOS || safari || !support.required)) {
-                        GracefulDegradation.utilites.addEvent(elem, "click", emulateValidate);
-                    }
-                }
-            }
-        }
-        
-        function searchForm(elem) {
-            while(elem.parentNode !== null){
-                if(elem.parentNode.tagName.toLowerCase() == "form") {
-                    return elem.parentNode;
-                }
-
-                elem = elem.parentNode;
+            for( var i=0, length=forms.length; i<length; i++ ) {
+                initForm(forms[i]);
             }
 
-            return false;
+            initialised = true;
         }
 
+        function initForm(form) {
+            for( var j=0, length=form.elements.length; j<length; j++ ) {
+                initElement(form.elements[j]);
+            }
+        }
+
+        function initElement(elem) {
+            if(!!elem.getAttribute("placeholder") && (isIOS || safari || !support.placeholder)) {
+                emulatePlaceholder(elem);
+            } 
+
+            if((elem.type.toLowerCase() == "submit" ||
+               elem.type.toLowerCase() == "button") && (isIOS || safari || !support.required)) {
+                utils.addEvent(elem, "click", emulateValidate);
+            }
+        }
+
+        /*
+         * context button|submit Node
+         */
         function emulateValidate(e) {
-            e = GracefulDegradation.utilites.fixEvent(e);
+            e = utils.fixEvent(e);
 
-            var form = searchForm(this),
+            var form = this.form,
                 warning = "",
                 isValid = true,
                 errors = {
@@ -790,17 +807,17 @@ if(window.jQuery) {
                     pattern: []
                 };
 
-            for( var j=0, lenE=form.elements.length; j<lenE; j++ ) {
+            for(var j=0, length=form.elements.length; j<length; j++) {
                 var elem = form.elements[j],
                     name = elem.getAttribute("name"),
                     pattern = elem.getAttribute("pattern");
 
-                if(elem.getAttribute("required") !== null) {
+                if(!!elem.getAttribute("required")) {
                     if(elem.value.length == 0 || 
                        elem.value == elem.getAttribute("placeholder"))
                         errors.required.push(name);
                 }
-                
+
                 if(!!pattern) {
                     if(!new RegExp(pattern.toString()).test(elem.value.toString()))
                         errors.pattern.push(name);
@@ -823,25 +840,22 @@ if(window.jQuery) {
             }
         };
 
-        /**
-         * context - input element
-         */
-        function emulatePlaceholder() {
+        function emulatePlaceholder(elem) {
 
-            var placeholder = this.getAttribute("placeholder");
+            var placeholder = elem.getAttribute("placeholder");
 
-            this.value = placeholder;
+            elem.value = placeholder;
 
-            this.onfocus = function() {
-                if(this.value == placeholder) this.value='';
+            elem.onfocus = function() {
+                if(elem.value == placeholder) elem.value='';
             }
 
-            this.onblur = function() {
-                if(this.value == '') this.value = placeholder;
+            elem.onblur = function() {
+                if(elem.value == '') elem.value = placeholder;
             }
 
         }
-    }
 
-    window.GracefulDegradation.utilites = window.lib;
+        init();
+    }
 })();
