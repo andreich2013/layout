@@ -1,15 +1,17 @@
 /**
  * library
- * 
- * @returns {object}
  */
-window.lib = (function() {
+window.lib = (function(win, doc) {
     
     var pattern = {
         space: /\s+/
     },
-    isTouch = !!('ontouchstart' in window) ||
-              !!(('msMaxTouchPoints' in window.navigator) && !('onmouseover' in window));
+    
+    isTouch = !!('ontouchstart' in win) ||
+              !!(('msMaxTouchPoints' in win.navigator) && !('onmouseover' in win)),
+      
+    html = doc.documentElement,
+    body = doc.body || html.body;
     
     function getObjectType(elem) {
         return {}.toString.call(elem).slice(8, -1).toLowerCase();
@@ -23,25 +25,23 @@ window.lib = (function() {
         
         getTime: (function() {
             
-            function native() {
-                return Date.now;
+            function _native() {
+                return win.Date.now;
             }
             
             function emulate() {
-                return new Date().getTime();
+                return new win.Date().getTime();
             }
             
-            return ('now' in Date) ? native : emulate;
+            return ('now' in win.Date) ? _native : emulate;
         }),
         
         // events
 
         fixEvent: function(e) {
-            e = e || window.event;
+            e = e || win.event;
 
             if ( e.isFixed ) { return e; }
-
-            var body, doc;
 
             e.preventDefault =  e.preventDefault || function(){ 
                 this.returnValue = false;
@@ -51,7 +51,7 @@ window.lib = (function() {
 
             // Support: IE<9
             if ( !e.target ) {
-                e.target = e.srcElement || document;
+                e.target = e.srcElement || doc;
             }
 
             // Support: Chrome 23+, Safari?
@@ -70,11 +70,8 @@ window.lib = (function() {
             // Calculate pageX/Y if missing and clientX/Y available
             if ( e.pageX == null && e.clientX != null ) {
 
-                doc = document.documentElement,
-                body = document.body;
-
-                e.pageX = e.clientX + ( doc && doc.scrollLeft || body && body.scrollLeft || 0 ) - ( doc && doc.clientLeft || body && body.clientLeft || 0 );
-                e.pageY = e.clientY + ( doc && doc.scrollTop  || body && body.scrollTop  || 0 ) - ( doc && doc.clientTop  || body && body.clientTop  || 0 );
+                e.pageX = e.clientX + ( html && html.scrollLeft || body && body.scrollLeft || 0 ) - ( html && html.clientLeft || body && body.clientLeft || 0 );
+                e.pageY = e.clientY + ( html && html.scrollTop  || body && body.scrollTop  || 0 ) - ( html && html.clientTop  || body && body.clientTop  || 0 );
 
             }
 
@@ -89,7 +86,7 @@ window.lib = (function() {
                 e.which = e.charCode != null ? e.charCode : e.keyCode;
             }
 
-            e.time = (new Date).getTime();
+            e.time = (new win.Date).getTime();
 
             e.isFixed = true;
 
@@ -98,7 +95,7 @@ window.lib = (function() {
 
         addEvent: (function(){
             
-            function native(el, event, fn) {
+            function _native(el, event, fn) {
                 el.addEventListener(event, fn, false);
             }
             
@@ -115,9 +112,9 @@ window.lib = (function() {
                 el['on'+ event] = fn;
             }
             
-            if('addEventListener' in window) {
-                return native;
-            } else if('attachEvent' in window) {
+            if('addEventListener' in win) {
+                return _native;
+            } else if('attachEvent' in win) {
                 return emulate;
             } else {
                 return old;
@@ -127,7 +124,7 @@ window.lib = (function() {
 
         removeEvent: (function() {
 
-            function native(el, event, fn) {
+            function _native(el, event, fn) {
                 el.removeEventListener(event, fn, false);
             }
             
@@ -139,9 +136,9 @@ window.lib = (function() {
                 el['on'+ event] = null;
             }
 
-            if('removeEventListener' in window) {
-                return native;
-            } else if('detachEvent' in window) {
+            if('removeEventListener' in win) {
+                return _native;
+            } else if('detachEvent' in win) {
                 return emulate;
             } else {
                 return old;
@@ -159,7 +156,7 @@ window.lib = (function() {
             
             var isNative = document.documentElement.nextElementSibling !== undefined;
             
-            function native(elem) {
+            function _native(elem) {
                 return elem.nextElementSibling;
             }
             
@@ -173,7 +170,7 @@ window.lib = (function() {
                 return current;
             }
             
-            return !!isNative ? native : emulate;
+            return !!isNative ? _native : emulate;
                 
         })(),
         
@@ -181,7 +178,7 @@ window.lib = (function() {
             
             var isNative = document.documentElement.previousElementSibling !== undefined;
             
-            function native(elem) {
+            function _native(elem) {
                 return elem.previousElementSibling;
             }
             
@@ -195,13 +192,13 @@ window.lib = (function() {
                 return current;
             }
             
-            return !!isNative ? native : emulate;
+            return !!isNative ? _native : emulate;
                 
         })(),
 
         getStyle: (function() {
             
-            function native(elem) {
+            function _native(elem) {
                 return window.getComputedStyle(elem, null)
             }
             
@@ -209,7 +206,7 @@ window.lib = (function() {
                 return elem.currentStyle;
             }
             
-            return ('getComputedStyle' in window) ? native : emulate;
+            return ('getComputedStyle' in window) ? _native : emulate;
         })(),
         
         after: function (elem, referenceElem) {
@@ -425,6 +422,54 @@ window.lib = (function() {
                 
                 return addHandler;
         })(),
+         
+        getWindowWidth: (function() {
+        
+            function _native() {
+                return win.innerWidth;
+            }
+
+            function emulate() {
+                return html.offsetWidth;
+            }
+
+            function old() {
+                return body.offsetWidth;
+            }
+
+            if (!!win.innerWidth) {
+                return _native;
+            } else if (doc.compatMode == 'CSS1Compat' && !!html && !!html.offsetWidth ) {
+                return emulate;
+            } else if (!!body && !!body.offsetWidth) {
+                return old;
+            }
+            
+        }()),
+
+        getWindowHeight: (function() {
+
+            function _native() {
+                return win.innerHeight;
+            }
+
+            function emulate() {
+                return html.offsetHeight;
+            }
+
+            function old() {
+                return body.offsetHeight;
+            }
+
+            if (!!win.innerHeight) {
+                return _native;
+            } else if (doc.compatMode == 'CSS1Compat' && !!html && !!html.offsetHeight ) {
+                return emulate;
+            } else if (!!body && !!body.offsetHeight) {
+                return old;
+            }
+            
+        }()),
 
         // determine type
 
@@ -586,7 +631,7 @@ window.lib = (function() {
 
     }
     
-})();
+})(window, document);
 
 /**
  * depends on matchMedia.js
@@ -622,6 +667,8 @@ window.lib = (function() {
                 safari: /Safari\/\w+\.\w+/i
             }
         }
+            
+        instance = {};
             
         instance.touch = utils.touch;  
         

@@ -8,11 +8,5 @@ RewriteCond %{REQUEST_URI} !^/$
 RewriteCond %{REQUEST_URI} (.*)/$
     RewriteRule . %1 [R=301,L,E=NS:1,QSA]
 
-RewriteCond %{REQUEST_FILENAME} -s [OR]
-RewriteCond %{REQUEST_FILENAME} -l [OR]
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^.*$ - [NC,L]
-RewriteRule ^.*$ index.php [NC,L]
-
 php_flag magic_quotes_gpc 0
 php_flag magic_quotes_runtime 0

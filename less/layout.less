@@ -181,8 +181,19 @@ a.underline{
     width: @widthLayout;
 }
 
+.overlay {
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background: @colorWhite;
+}
+
 .insted-hr-gray{
-    .insted-hr(@colorGray,lighten(@colorGray,30%))
+    .insted-hr(@colorGray,lighten(@colorGray,30%));
 }
 
 .bufer-vertical{
