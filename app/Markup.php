@@ -6,6 +6,8 @@
 class Markup {
     private static $instance;
 
+    private static $currentPage;
+
     private function __construct() {
         self::$urlRoot = 'http://' . $_SERVER['HTTP_HOST'];
         self::$pathRoot = getenv('DOCUMENT_ROOT');
@@ -60,6 +62,14 @@ class Markup {
         }
     }
 
+    public static function setPage($page) {
+        self::$currentPage = $page;
+    }
+    
+    public static function getPage() {
+        return self::$currentPage;
+    }
+    
     /**
      * rendering only from dir '/app/helpers'
      */
@@ -72,6 +82,21 @@ class Markup {
         ob_end_clean();
 
         return $content;
+    }
+    
+    public function sentHeaders() {
+        $expiresDate = new DateTime();
+        $expiresDate->modify('+7 days');
+        header("Cache-Control: private, max-age=3600");
+        header("Expires: " . $expiresDate->format("D, d M Y H:m:s GMT"));
+    }
+
+    public static function redirect($url = null) {
+        if($url == null) return;
+
+        $this->sentHeaders();
+
+        header("Location: " . $url);
     }
 }
 

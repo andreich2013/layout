@@ -1,7 +1,7 @@
 /**
  * library
  */
-window.lib = (function(win, doc) {
+var lib = (function(win, doc) {
     
     var pattern = {
         space: /\s+/
@@ -470,6 +470,26 @@ window.lib = (function(win, doc) {
             }
             
         }()),
+        
+        isHidden: function(elem) {
+            return !elem.offsetWidth && !elem.offsetHeight;
+        },
+        
+        getElemCoords: function (elem) {
+
+            var box = elem.getBoundingClientRect();
+
+            var scrollTop = win.pageYOffset || html.scrollTop || body.scrollTop;
+            var scrollLeft = win.pageXOffset || html.scrollLeft || body.scrollLeft;
+
+            var clientTop = html.clientTop || body.clientTop || 0;
+            var clientLeft = html.clientLeft || body.clientLeft || 0;
+
+            return { 
+                top: Math.round(box.top + scrollTop - clientTop), 
+                left: Math.round(box.left + scrollLeft - clientLeft) 
+            };
+        },
 
         // determine type
 
@@ -556,8 +576,8 @@ window.lib = (function(win, doc) {
          },
               
         /**
-        * we can add this object like prototype to handlers objects
-        */
+         * we can add this object like prototype to handlers objects
+         */
         objectExtention: {
 
             on: function(eventName, handler) {
@@ -638,19 +658,21 @@ window.lib = (function(win, doc) {
  * 
  * Singleton
  */
-(function() {
+var determinesDevice = (function() {
+    
+    // determine dependencies
+    var utils = window.lib;
+    
     var instance;
-    window.determinesDevice = function() {
+    
+    return function() {
         if (typeof instance !== 'undefined') {
             return instance;
         }
-            
-        // determine dependencies
-        var utils = window.lib,
-            matchMedia = window.matchMedia,
-            ua = navigator.userAgent;
         
-        var patterns = {
+        
+        var ua = navigator.userAgent,
+            patterns = {
             device: {
                 IPad: /iPad/i,
                 IPhone: /iPhone/i,
@@ -704,7 +726,7 @@ window.lib = (function(win, doc) {
         }
 
         instance.decorateHtml = function () {
-            var body = lib.get("body", null, true),
+            var body = utils.get("body", null, true),
                 className = instance.browser + ' ' + instance.type;
 
             if(instance.isIPad) {
@@ -731,17 +753,17 @@ window.lib = (function(win, doc) {
                 className += " isAndroid";
             }
             
-            lib.addClass(className);
+            utils.addClass(className);
         }
         
-        return instance = instance;
+        return instance;
     };
 })();
 
 /**
  * functions depends on jQuery 1.x
  */ 
-if(window.jQuery) {
+if(jQuery) {
     (function($) {
         
         window.$lib = {
@@ -791,11 +813,11 @@ if(window.jQuery) {
                 });
             }
         }
-    })(window.jQuery);
+    })(jQuery);
 }
 
 
-window.GracefulDegradation = (function() {
+var gracefulDegradation = (function() {
 
     var utils = window.lib,
         initialised = false;

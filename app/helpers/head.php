@@ -48,43 +48,7 @@
     <link rel="stylesheet" type="text/css" href="/fonts/font-awesome/css/font-awesome-ie7.min.css">
 <![endif]-->
 
-<script type="text/javascript">
-    var markup = {
-        currentPage: '<?= $markup->router->getCurrentPage();?>',
-        request: (function() {
-
-            function parseLocationSearch() {
-
-                var search = window.location.search,
-                    request = {};
-
-                if(search.length == 0) {
-                    return request;
-                }
-
-                var searchArr = window.location.search.substring(1).split('&');
-                searchArr.splice(searchArr.indexOf(''), 1);
-
-                for(var i = 0, length = searchArr.length; i < length; i++) {
-                    var tmpArr = searchArr[i].split('=');
-                    request[tmpArr[0]] = tmpArr[1];
-                }
-
-                return request;
-            }
-
-            return {
-                search: parseLocationSearch(),
-                host: window.location.hostname,
-                pathname: window.location.pathname,
-                hash: window.location.hash
-            };
-
-        })()
-    };
-</script>
 <script type="text/javascript" src="/js/matchMedia/matchMedia.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script type="text/javascript" src="/js/lib/lib.js"></script>
 <script type="text/javascript" src="/js/app/common.js"></script>
-<script type="text/javascript" src="/js/app/index.js"></script>
