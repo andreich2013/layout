@@ -1,0 +1,21 @@
+{
+  "name": "reeldeal",
+  "version": "0.0.0",
+  "description": "Reel Deal",
+  "authors": "http://primary.technology/",
+  "ignore": [
+    "node_modules",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.4.7",
+    "angular-cookies": "^1.4.7",
+    "angular-sanitize": "^1.4.7",
+    "angular-ui-router": "^0.2.15",
+    "angular-material": "^1.0.3"
+  },
+  "devDependencies": {
+    "angular-mocks": "^1.4.7"
+  }
+}
