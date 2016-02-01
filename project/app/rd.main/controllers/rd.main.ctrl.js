@@ -6,7 +6,7 @@
         .controller('rd.main.ctrl', Controller);
 
     /** @ngInject */
-    function Controller($scope) {
+    function Controller() {
 
     }
 
