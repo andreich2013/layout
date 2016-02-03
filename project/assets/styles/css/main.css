@@ -1,3 +1,15 @@
+/* line 7, ../scss/main.scss */
+.main-content {
+  background: #009688;
+}
 
+/* line 13, ../scss/main.scss */
+md-input-container input {
+  color: rgba(255, 255, 255, 0.87);
+}
+/* line 17, ../scss/main.scss */
+md-input-container .md-errors-spacer {
+  min-height: 0;
+}
 
-/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJtYWluLmNzcyJ9 */
+/*# sourceMappingURL=main.css.map */

@@ -2,3 +2,20 @@
 
 @import "compass/css3/animation";
 
+
+
+.main-content {
+    background: #009688;
+}
+
+md-input-container {
+
+    input {
+        color: rgba(255,255,255,0.87);
+    }
+
+    .md-errors-spacer {
+        min-height: 0;
+    }
+
+}

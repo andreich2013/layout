@@ -1,38 +1,9 @@
-<div layout="row" layout-fill>
+<div ui-view="top" layout="row"></div>
 
-    <!--<div ui-view="top"></div>-->
+<div flex layout="row">
 
-    <!--<div ui-view="left"></div>-->
+    <md-content ui-view flex class="main-content"></md-content>
 
-    <!--<div ui-view="right"></div>-->
-
-    <!--<md-content ui-view></md-content>-->
-    <md-toolbar>
-        <div class="md-toolbar-tools">
-            <span>Reel Deal</span>
-            <!-- fill up the space between left and right area -->
-            <span flex></span>
-            <md-button>
-                Right Bar Button
-            </md-button>
-        </div>
-    </md-toolbar>
-    <md-sidenav md-component-id="left" class="md-sidenav-left">
-        Left Nav!
-    </md-sidenav>
-    <md-content>
-        Center Content
-        <md-button ng-click="openLeftMenu()">
-            Open Left Menu
-        </md-button>
-    </md-content>
-    <md-sidenav md-component-id="right" md-is-locked-open="$mdMedia('min-width: 333px')" class="md-sidenav-right">
-        <form>
-            <md-input-container>
-                <label for="testInput">Test input</label>
-                <input id="testInput" type="text" ng-model="data" md-autofocus>
-            </md-input-container>
-        </form>
-    </md-sidenav>
+    <md-sidenav ui-view="right" md-component-id="right" class="md-sidenav-right"></md-sidenav>
 
 </div>

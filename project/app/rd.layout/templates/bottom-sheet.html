@@ -1,0 +1,9 @@
+<md-bottom-sheet>
+    <nav flex>
+        <a ng-repeat="item in links"
+           ui-sref="{{item.state}}"
+           ng-attr-href="{{item.url ? item.url : undefined}}">
+            {{item.label}}
+        </a>
+    </nav>
+</md-bottom-sheet>

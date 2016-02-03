@@ -1,12 +1,47 @@
-<div layout="row" layout-fill>
-    <md-toolbar>
-        <div class="md-toolbar-tools">
-            <span>Reel Deal</span>
-            <!-- fill up the space between left and right area -->
-            <span flex></span>
-            <md-button>
-                Right Bar Button
+<md-toolbar layout="row">
+    <div class="md-toolbar-tools">
+        <md-button class="md-icon-button"
+                   ng-click="showBottomSheet()"
+                   ng-show="!searchBlock.isVisible"
+                   hide-gt-xs>
+            <md-icon>menu</md-icon>
+        </md-button>
+
+        <h2 ng-show="!searchBlock.isVisible" hide-xs>Layout</h2>
+        <!-- fill up the space between left and right area -->
+
+        <nav flex-offset="5"
+             flex
+             layout="row"
+             layout-align="left center"
+             ng-show="!searchBlock.isVisible"
+             hide-xs>
+            <a ng-repeat="item in links"
+               ui-sref="{{item.state}}"
+               ng-attr-href="{{item.url ? item.url : undefined}}"
+               class="md-button md-ink-ripple">
+                {{item.label}}
+            </a>
+        </nav>
+
+        <!--<div class="search-block" ng-show="searchBlock.isVisible" layout="row" layout-align="center center">-->
+            <md-button class="md-icon-button" ng-show="searchBlock.isVisible" ng-click="searchBlock.toggle()" hide-xs>
+                <md-icon>arrow_back</md-icon>
             </md-button>
-        </div>
-    </md-toolbar>
-</div>
+            <md-input-container md-theme="input" flex ng-show="searchBlock.isVisible" hide-xs>
+                <input ng-model="search" placeholder="enter search">
+            </md-input-container>
+            <md-input-container md-theme="input" flex hide-gt-xs>
+                <input ng-model="search" placeholder="enter search">
+            </md-input-container>
+        <!--</div>-->
+
+        <md-button ng-show="!searchBlock.isVisible" hide-xs class="md-icon-button" ng-click="searchBlock.toggle()">
+            <md-icon>search</md-icon>
+        </md-button>
+
+        <md-button class="md-icon-button" ng-click="toggleSideRight()">
+            <md-icon>account_circle</md-icon>
+        </md-button>
+    </div>
+</md-toolbar>
