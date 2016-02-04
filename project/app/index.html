@@ -18,7 +18,7 @@
         <link href="assets/styles/css/main.css" rel="stylesheet">
         <!-- endbuild -->
     </head>
-    <body ng-app="reeldeal">
+    <body ng-app="baselayout">
 
         <div layout-fill layout="column" ui-view></div>
 
@@ -26,7 +26,6 @@
         <script src="bower_components/angular/angular.js"></script>
         <script src="bower_components/angular-cookies/angular-cookies.js"></script>
         <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-        <script src="bower_components/angular-tiny-eventemitter/dist/angular-tiny-eventemitter.js"></script>
         <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
         <script src="bower_components/angular-animate/angular-animate.js"></script>
         <script src="bower_components/angular-aria/angular-aria.js"></script>
@@ -35,23 +34,24 @@
         <!-- endbuild -->
 
         <!-- build:js({.tmp,project}) scripts/main.js -->
-        <script src="app/rd.main/app.js"></script>
+        <script src="app/bl.main/app.js"></script>
         <script src="app/env.js"></script>
-        <script src="app/rd.main/rd.events.js"></script>
-        <script src="app/rd.main/services/rd.config.svc.js"></script>
-        <script src="app/rd.main/services/rd.context.svc.js"></script>
-        <script src="app/rd.main/controllers/rd.main.ctrl.js"></script>
+        <script src="app/bl.main/bl.events.js"></script>
+        <script src="app/bl.main/services/bl.config.svc.js"></script>
+        <script src="app/bl.main/services/bl.context.svc.js"></script>
+        <script src="app/bl.main/controllers/bl.main.ctrl.js"></script>
 
-        <script src="app/rd.layout/rd.layout.routing.js"></script>
-        <script src="app/rd.layout/controllers/rd.404.ctrl.js"></script>
-        <script src="app/rd.layout/controllers/rd.header.ctrl.js"></script>
-        <script src="app/rd.layout/controllers/rd.layout.ctrl.js"></script>
-        <script src="app/rd.layout/controllers/rd.leftSide.ctrl.js"></script>
-        <script src="app/rd.layout/controllers/rd.rightSide.ctrl.js"></script>
-        <script src="app/rd.layout/controllers/rd.bottomSheet.ctrl.js"></script>
-        <script src="app/rd.layout/services/rd.topNav.svc.js"></script>
+        <script src="app/bl.layout/bl.layout.routing.js"></script>
+        <script src="app/bl.layout/controllers/bl.404.ctrl.js"></script>
+        <script src="app/bl.layout/controllers/bl.header.ctrl.js"></script>
+        <script src="app/bl.layout/controllers/bl.layout.ctrl.js"></script>
+        <script src="app/bl.layout/controllers/bl.leftSide.ctrl.js"></script>
+        <script src="app/bl.layout/controllers/bl.rightSide.ctrl.js"></script>
+        <script src="app/bl.layout/controllers/bl.bottomSheet.ctrl.js"></script>
+        <script src="app/bl.layout/services/bl.topNav.svc.js"></script>
 
-        <script src="app/rd.common/rd.common.js"></script>
+        <script src="app/bl.common/bl.common.js"></script>
+        <script src="app/bl.common/controllers/bl.search.ctrl.js"></script>
         <!-- endbuild -->
     </body>
 </html>

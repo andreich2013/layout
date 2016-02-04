@@ -1,7 +1,0 @@
-.tmp
-.idea
-.sass-cache
-node_modules
-project/bower_components
-project/app/env.js
-dist

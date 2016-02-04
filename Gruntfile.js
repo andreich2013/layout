@@ -11,7 +11,7 @@ module.exports = function (grunt) {
 
     // Configurable paths for the application
     var config = {
-            name: "reeldeal",
+            name: "baselayout",
             root: '.',
             app: './project/app',
             bower: './project/bower_components',
@@ -375,7 +375,6 @@ module.exports = function (grunt) {
                 cwd: '<%= _module.app %>',
                 src: [
                     '**/*.html',
-                    '!tip.portal.demo*/**/*.html',
                     '!index.html'
                 ],
                 dest: '.tmp/templateCache.js'

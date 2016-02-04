@@ -10,7 +10,7 @@
 
 md-input-container {
 
-    input {
+    .md-input {
         color: rgba(255,255,255,0.87);
     }
 
@@ -18,4 +18,18 @@ md-input-container {
         min-height: 0;
     }
 
+}
+
+.bottom-sheet-wrapper {
+    position: absolute;
+    display: flex;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+}
+
+md-bottom-sheet {
+    overflow: auto;
+    max-width: 100%;
+    max-height: 100%;
 }

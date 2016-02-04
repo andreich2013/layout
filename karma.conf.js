@@ -30,17 +30,17 @@ module.exports = function (config) {
             'bower_components/angular-material/angular-material.js',
 
             'app/rd.main/app.js',
-            'app/rd.main/rd.events.js',
-            'app/rd.main/services/rd.config.svc.js',
-            'app/rd.main/services/rd.context.svc.js',
-            'app/rd.main/controllers/rd.main.ctrl.js',
+            'project/app/rd.main/bl.events.js',
+            'project/app/rd.main/services/bl.config.svc.js',
+            'project/app/rd.main/services/bl.context.svc.js',
+            'project/app/rd.main/controllers/bl.main.ctrl.js',
 
-            'app/rd.layout/rd.layout.routing.js',
-            'app/rd.layout/controllers/rd.404.ctrl.js',
-            'app/rd.layout/controllers/rd.header.ctrl.js',
-            'app/rd.layout/controllers/rd.layout.ctrl.js',
-            'app/rd.layout/controllers/rd.leftSide.ctrl.js',
-            'app/rd.layout/controllers/rd.rightSide.ctrl.js',
+            'project/app/rd.layout/bl.layout.routing.js',
+            'project/app/rd.layout/controllers/bl.404.ctrl.js',
+            'project/app/rd.layout/controllers/bl.header.ctrl.js',
+            'project/app/rd.layout/controllers/bl.layout.ctrl.js',
+            'project/app/rd.layout/controllers/bl.leftSide.ctrl.js',
+            'project/app/rd.layout/controllers/bl.rightSide.ctrl.js',
 
             'app/rd.common/rd.common.js',
 
